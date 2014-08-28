@@ -1,0 +1,15 @@
+* SPI
+* I2C
+* OneWire
+* Serial
+* Servos (part of PWM in REST interface, but different role)
+* Sensors
+    * Temperature
+    * Pressure
+    * Luminosity
+    * Distance
+    * Gyro
+    * Accelerometer
+    * Moisture
+* Wireless communication
+    * NRF24L01
