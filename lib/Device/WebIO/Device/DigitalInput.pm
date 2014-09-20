@@ -22,7 +22,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
 package Device::WebIO::Device::DigitalInput;
-$Device::WebIO::Device::DigitalInput::VERSION = '0.001';
+$Device::WebIO::Device::DigitalInput::VERSION = '0.002';
 use v5.12;
 use Moo::Role;
 
@@ -31,6 +31,7 @@ with 'Device::WebIO::Device';
 requires 'input_pin_count';
 requires 'input_pin';
 requires 'set_as_input';
+requires 'is_set_input';
 
 # There may be more efficient ways to do this on your platform.  Override 
 # this if there are.
@@ -76,6 +77,12 @@ Return the input value for the given pin.
     set_as_input( $pin );
 
 Set the given pin as an input pin.
+
+=head2 is_set_input
+
+    is_set_input( $pin );
+
+Return true if the given pin is set as input.
 
 =head1 PROVIDED METHODS
 

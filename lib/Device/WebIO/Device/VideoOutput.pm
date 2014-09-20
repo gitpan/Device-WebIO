@@ -22,7 +22,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
 package Device::WebIO::Device::VideoOutput;
-$Device::WebIO::Device::VideoOutput::VERSION = '0.001';
+$Device::WebIO::Device::VideoOutput::VERSION = '0.002';
 use v5.12;
 use Moo::Role;
 

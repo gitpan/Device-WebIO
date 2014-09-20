@@ -1,3 +1,16 @@
+FOR 0.002 RELEASE
+* Test PCDuino on physical device
+
+EXTENDED TODO
+* PCDuino:
+    * PWM
+    * ADC
+* GStreamer
+    * all_desc()/pin_desc()
+    * Docs
+    * Release
+* Still camera
+* Interrupts
 * SPI
 * I2C
 * OneWire

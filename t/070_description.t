@@ -21,18 +21,46 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
-use Test::More tests => 12;
-use v5.12;
+use Test::More tests => 3;
+use v5.14;
+use lib 't/lib/';
+use Device::WebIO;
+use MockDigitalInput;
 
-use_ok( 'Device::WebIO::Exceptions' );
-use_ok( 'Device::WebIO' );
-use_ok( 'Device::WebIO::Device' );
-use_ok( 'Device::WebIO::Device::DigitalInput' );
-use_ok( 'Device::WebIO::Device::DigitalOutput' );
-use_ok( 'Device::WebIO::Device::ADC' );
-use_ok( 'Device::WebIO::Device::PWM' );
-use_ok( 'Device::WebIO::Device::SPI' );
-use_ok( 'Device::WebIO::Device::I2C' );
-use_ok( 'Device::WebIO::Device::Serial' );
-use_ok( 'Device::WebIO::Device::OneWire' );
-use_ok( 'Device::WebIO::Device::VideoOutput' );
+my $webio = Device::WebIO->new;
+my $input = MockDigitalInput->new({
+    input_pin_count => 4,
+});
+$webio->register( 'foo', $input );
+
+is_deeply( $webio->pin_desc( 'foo' ), [qw{
+    V50 GND GND 0 1 2 3 GND
+}]);
+
+is_deeply( $webio->all_desc( 'foo' ), {
+    UART    => 0,
+    SPI     => 0,
+    I2C     => 0,
+    ONEWIRE => 0,
+    GPIO    => {
+        0 => { function => 'IN', value => 0 },
+        1 => { function => 'IN', value => 0 },
+        2 => { function => 'IN', value => 0 },
+        3 => { function => 'IN', value => 0 },
+    },
+});
+
+$input->mock_set_input( 0, 1 );
+
+is_deeply( $webio->all_desc( 'foo' ), {
+    UART    => 0,
+    SPI     => 0,
+    I2C     => 0,
+    ONEWIRE => 0,
+    GPIO    => {
+        0 => { function => 'IN', value => 1 },
+        1 => { function => 'IN', value => 0 },
+        2 => { function => 'IN', value => 0 },
+        3 => { function => 'IN', value => 0 },
+    },
+});
