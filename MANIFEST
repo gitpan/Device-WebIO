@@ -17,6 +17,7 @@ lib/Device/WebIO/Device/OneWire.pm
 lib/Device/WebIO/Device/PWM.pm
 lib/Device/WebIO/Device/SPI.pm
 lib/Device/WebIO/Device/Serial.pm
+lib/Device/WebIO/Device/StillImageOutput.pm
 lib/Device/WebIO/Device/VideoOutput.pm
 lib/Device/WebIO/Exceptions.pm
 t/001_load.t
@@ -27,11 +28,14 @@ t/030_adc_input.t
 t/040_pwm_output.t
 t/060_video_output.t
 t/070_description.t
+t/080_still_image_output.t
 t/200_two_types_one_obj.t
 t/lib/MockADCInput.pm
 t/lib/MockDigitalInput.pm
 t/lib/MockDigitalInputOutput.pm
 t/lib/MockDigitalOutput.pm
 t/lib/MockPWMOutput.pm
+t/lib/MockStillImageOutput.pm
 t/lib/MockVideoOutput.pm
+t_data/test.jpg
 t_data/wumpus_video_dump.h264

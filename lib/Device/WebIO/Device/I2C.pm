@@ -1,5 +1,5 @@
 package Device::WebIO::Device::I2C;
-$Device::WebIO::Device::I2C::VERSION = '0.002';
+$Device::WebIO::Device::I2C::VERSION = '0.003';
 use v5.12;
 use Moo;
 use namespace::clean;

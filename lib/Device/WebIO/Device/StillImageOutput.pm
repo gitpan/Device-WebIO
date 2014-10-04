@@ -21,32 +21,20 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
-package Device::WebIO::Device::DigitalOutput;
-$Device::WebIO::Device::DigitalOutput::VERSION = '0.003';
+package Device::WebIO::Device::StillImageOutput;
+$Device::WebIO::Device::StillImageOutput::VERSION = '0.003';
 use v5.12;
 use Moo::Role;
 
 with 'Device::WebIO::Device';
 
-requires 'output_pin_count';
-requires 'output_pin';
-requires 'set_as_output';
-requires 'is_set_output';
-
-# There may be more efficient ways to do this on your platform.  Override 
-# this if there are.
-sub output_port
-{
-    my ($self, $out) = @_;
-
-    for (0 .. ($self->output_pin_count - 1)) {
-        my $pin_out = ($out >> $_) & 1;
-        $self->output_pin( $_, $pin_out );
-    }
-
-    return 1;
-}
-
+requires 'img_channels';
+requires 'img_height';
+requires 'img_width';
+requires 'img_set_height';
+requires 'img_set_width';
+requires 'img_allowed_content_types';
+requires 'img_stream';
 
 1;
 __END__
@@ -54,45 +42,52 @@ __END__
 
 =head1 NAME
 
-  Device::WebIO::Device::DigitalOutput - Role for general-purpose digital output
+  Device::WebIO::Device::StillImageOutput - Role for still images
 
 =head1 REQUIRED METHODS
 
-=head2 output_pin_count
+=head2 img_channels
 
-    output_pin_count();
+    img_channels();
 
-Return the number of output pins.
+Return the number of video channels.
 
-=head2 output_pin
+=head2 img_height
 
-    output_pin( $pin, $value );
+    img_height( $channel );
 
-Set the given value for the given pin.
+Return the height of the video for the given channel.
 
-=head2 set_as_output
+=head2 img_width
 
-    set_as_output( $pin );
+    img_width( $channel );
 
-Set the given pin as an output pin.
+Return the width of the video for the given channel.
 
-=head2 is_set_output
+=head2 img_set_width
 
-    is_set_output( $pin );
+    img_set_width( $channel, $width );
 
-Returns true if the given pin is set as an output pin.
+Set the width of the video for the given channel.
 
-=head1 PROVIDED METHODS
+=head2 img_set_height
 
-=head2 output_port
+    img_set_height( $channel, $height );
 
-    output_port( $bitstring );
+Set the height of the video for the given channel.
 
-Set all the output pins at once with a bitstring.
+=head2 img_allowed_content_types
 
-The default implementation sets this by iterating through using C<output_pin()>.
-Many platforms have an efficient way of setting all the pins at once, so you 
-may wish to override this.
+    img_allowed_content_types( $channel );
+
+Return a list of supported MIME types by the given channel.
+
+=head2 img_stream
+
+    img_stream( $channel, $type );
+
+Return a filehandle for reading the image stream for the given channel.  
+C<$type> must be one of the types returned by C<img_allowed_content_types()>.
 
 =head1 LICENSE
 

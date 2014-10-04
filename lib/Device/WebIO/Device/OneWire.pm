@@ -1,5 +1,5 @@
 package Device::WebIO::Device::OneWire;
-$Device::WebIO::Device::OneWire::VERSION = '0.002';
+$Device::WebIO::Device::OneWire::VERSION = '0.003';
 use v5.12;
 use Moo;
 use namespace::clean;
