@@ -22,7 +22,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
 package Device::WebIO;
-$Device::WebIO::VERSION = '0.003';
+$Device::WebIO::VERSION = '0.004';
 # ABSTRACT: Duct Tape for the Internet of Things
 use v5.12;
 use Moo;
@@ -408,6 +408,55 @@ sub img_stream
     return $obj->img_stream( $pin, $type );
 }
 
+sub i2c_read
+{
+    my ($self, $name, $pin, $addr, $register, $num_bytes) = @_;
+    my $obj = $self->_get_obj( $name );
+    $self->_pin_count_check( $name, $obj, $pin, 'I2CProvider' );
+    return $obj->i2c_read( $pin, $addr, $register, $num_bytes );
+}
+
+sub i2c_write
+{
+    my ($self, $name, $pin, $addr, $register, @bytes) = @_;
+    my $obj = $self->_get_obj( $name );
+    $self->_pin_count_check( $name, $obj, $pin, 'I2CProvider' );
+    return $obj->i2c_write( $pin, $addr, $register, @bytes );
+}
+
+sub temp_celsius
+{
+    my ($self, $name) = @_;
+    my $obj = $self->_get_obj( $name );
+    Device::WebIO::FunctionNotSupportedException->throw(
+        message => "Asked for temperature, but $name does not do the"
+            . " TempSensor role"
+    ) if ! $obj->does( 'Device::WebIO::Device::TempSensor' );
+    return $obj->temp_celsius;
+}
+
+sub temp_kelvins
+{
+    my ($self, $name) = @_;
+    my $obj = $self->_get_obj( $name );
+    Device::WebIO::FunctionNotSupportedException->throw(
+        message => "Asked for temperature, but $name does not do the"
+            . " TempSensor role"
+    ) if ! $obj->does( 'Device::WebIO::Device::TempSensor' );
+    return $obj->temp_kelvins;
+}
+
+sub temp_fahrenheit
+{
+    my ($self, $name) = @_;
+    my $obj = $self->_get_obj( $name );
+    Device::WebIO::FunctionNotSupportedException->throw(
+        message => "Asked for temperature, but $name does not do the"
+            . " TempSensor role"
+    ) if ! $obj->does( 'Device::WebIO::Device::TempSensor' );
+    return $obj->temp_fahrenheit;
+}
+
 
 sub _get_obj
 {
@@ -459,6 +508,10 @@ sub _pin_count_for_obj
     elsif( $type eq 'StillImageOutput' &&
         $obj->does( 'Device::WebIO::Device::StillImageOutput' ) ) {
         $count = $obj->img_channels;
+    }
+    elsif( $type eq 'I2CProvider' &&
+        $obj->does( 'Device::WebIO::Device::I2CProvider' ) ) {
+        $count = $obj->i2c_channels;
     }
 
     return $count;
@@ -826,6 +879,22 @@ Returns a list of MIME types allowed for the given video channel.
 
 Returns a filehandle for streaming the video channel.  C<$type> is one of the 
 MIME types return by C<img_allowed_content_types()>.
+
+=head2 I2C
+
+=head3 i2c_read
+
+    i2c_read( $name, $pin, $addr, $register, $num_bytes );
+
+Read C<$num_bytes> bytes from the I2C register for the device on the given 
+bus and address.  Returns a list C<$num_bytes> long.
+
+=head3 i2c_write
+
+    i2c_write( $name, $pin, $addr, $register, @bytes );
+
+Write the C<@bytes> list of bytes to the I2C register for the device on the 
+given bus and address.
 
 =head1 SEE ALSO
 

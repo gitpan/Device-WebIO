@@ -22,7 +22,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
 package Device::WebIO::Device::StillImageOutput;
-$Device::WebIO::Device::StillImageOutput::VERSION = '0.003';
+$Device::WebIO::Device::StillImageOutput::VERSION = '0.004';
 use v5.12;
 use Moo::Role;
 

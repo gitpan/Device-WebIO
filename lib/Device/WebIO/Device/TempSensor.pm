@@ -21,44 +21,57 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
-package Device::WebIO::Device::ADC;
-$Device::WebIO::Device::ADC::VERSION = '0.004';
+package Device::WebIO::Device::TempSensor;
+$Device::WebIO::Device::TempSensor::VERSION = '0.004';
 use v5.12;
 use Moo::Role;
 
 with 'Device::WebIO::Device';
-
-requires 'adc_max_int';
-requires 'adc_bit_resolution';
-requires 'adc_volt_ref';
-requires 'adc_pin_count';
-requires 'adc_input_int';
+requires 'temp_kelvins';
+requires 'temp_celsius';
+requires 'temp_fahrenheit';
 
 
-sub adc_max_int
+sub _convert_c_to_k
 {
-    my ($self, $pin) = @_;
-    my $bit_resolution = $self->adc_bit_resolution( $pin );
-    return 2 ** $bit_resolution - 1;
+    my ($self, $val) = @_;
+    return $val + 273.15
 }
 
-sub adc_input_float
+sub _convert_c_to_f
 {
-    my ($self, $pin) = @_;
-    my $in       = $self->adc_input_int( $pin );
-    my $max_int  = $self->adc_max_int( $pin );
-    my $in_float = $in / $max_int;
-    return $in_float;
+    my ($self, $val) = @_;
+    return (9/5) * $val + 32;
 }
 
-sub adc_input_volts
+sub _convert_f_to_k
 {
-    my ($self, $pin) = @_;
-    my $in_float = $self->adc_input_float( $pin );
-    my $volt_ref = $self->adc_volt_ref( $pin );
-    my $in_volt  = $volt_ref * $in_float;
-    return $in_volt;
+    my ($self, $val) = @_;
+    return $self->_convert_c_to_k(
+        $self->_convert_f_to_c( $val )
+    );
 }
+
+sub _convert_f_to_c
+{
+    my ($self, $val) = @_;
+    return (5/9) * ($val - 32);
+}
+
+sub _convert_k_to_c
+{
+    my ($self, $val) = @_;
+    return $val - 273.15;
+}
+
+sub _convert_k_to_f
+{
+    my ($self, $val) = @_;
+    return $self->_convert_c_to_f(
+        $self->_convert_k_to_c( $val )
+    );
+}
+
 
 
 1;
@@ -67,57 +80,7 @@ __END__
 
 =head1 NAME
 
-  Device::WebIO::Device::ADC - Role for Analog-to-Digital Input Converters
 
-=head1 REQUIRED METHODS
-
-=head2 adc_bit_resolution
-
-    adc_bit_resolution( $pin );
-
-Return the resolution for the given pin.
-
-=head2 adc_volt_ref
-
-    adc_volt_ref( $pin );
-
-Return the voltage reference for the given pin.
-
-=head2 adc_pin_count
-
-    adc_pin_count();
-
-Return the number of ADC pins.
-
-=head2 adc_input_int
-
-    adc_input_int( $pin );
-
-Return the integer input value for the given pin.
-
-=head1 PROVIDED METHODS
-
-=head2 adc_max_int
-
-    adc_max_int( $pin );
-
-Return the maximum integer value for the given pin.  In the default 
-implementation, this is calculated based on C<adc_bit_resolution()>.
-
-=head2 adc_input_float
-
-    adc_input_float( $pin );
-
-Returns a floating point number of the input between 0.0 and 1.0.  In the 
-default implementation, this is calculated based on C<adc_input_int()> and 
-C<adc_max_int()>.
-
-=head2 adc_input_volt
-
-    adc_input_volt( $pin );
-
-Returns the voltage level input of the pin.  In the default implementation, 
-this is calculated based on <adc_input_float()> and C<adc_volt_ref()>.
 
 =head1 LICENSE
 

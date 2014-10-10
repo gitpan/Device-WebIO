@@ -1,19 +1,26 @@
+NEXT RELEASE
+    * I2CProvider docs
+    * I2CUser docs
+    * Temperature sensor docs
+
 EXTENDED TODO
 * PCDuino:
+    * I2C
     * PWM
     * ADC
+* Firmata
+    * ADC
+    * I2C
 * GStreamer
     * all_desc()/pin_desc()
     * Docs
     * Release
 * Interrupts
 * SPI
-* I2C
 * OneWire
 * Serial
 * Servos (part of PWM in REST interface, but different role)
 * Sensors
-    * Temperature
     * Pressure
     * Luminosity
     * Distance
