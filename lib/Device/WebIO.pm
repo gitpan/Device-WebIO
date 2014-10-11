@@ -22,7 +22,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
 package Device::WebIO;
-$Device::WebIO::VERSION = '0.004';
+$Device::WebIO::VERSION = '0.005';
 # ABSTRACT: Duct Tape for the Internet of Things
 use v5.12;
 use Moo;

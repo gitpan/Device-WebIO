@@ -22,7 +22,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
 package Device::WebIO::Device::ADC;
-$Device::WebIO::Device::ADC::VERSION = '0.004';
+$Device::WebIO::Device::ADC::VERSION = '0.005';
 use v5.12;
 use Moo::Role;
 
