@@ -22,7 +22,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
 package Device::WebIO::Device::StillImageOutput;
-$Device::WebIO::Device::StillImageOutput::VERSION = '0.005';
+$Device::WebIO::Device::StillImageOutput::VERSION = '0.006';
 use v5.12;
 use Moo::Role;
 
@@ -31,8 +31,10 @@ with 'Device::WebIO::Device';
 requires 'img_channels';
 requires 'img_height';
 requires 'img_width';
+requires 'img_quality';
 requires 'img_set_height';
 requires 'img_set_width';
+requires 'img_set_quality';
 requires 'img_allowed_content_types';
 requires 'img_stream';
 
@@ -64,6 +66,12 @@ Return the height of the video for the given channel.
 
 Return the width of the video for the given channel.
 
+=head2 img_quality
+
+    img_quality( $channel );
+
+Return the quality of the compression.  For JPEG, this would be 0 through 100.
+
 =head2 img_set_width
 
     img_set_width( $channel, $width );
@@ -75,6 +83,12 @@ Set the width of the video for the given channel.
     img_set_height( $channel, $height );
 
 Set the height of the video for the given channel.
+
+=head2 img_set_quality
+
+    img_set_quality( $channel, $quality );
+
+Set the quality of compression.  For JPEG, this would be 0 through 100.
 
 =head2 img_allowed_content_types
 

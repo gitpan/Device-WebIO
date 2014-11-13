@@ -7,6 +7,7 @@ Makefile.PL
 README
 TODO
 dist.ini
+examples/rpi_firmata_link_blink.pl
 lib/Device/WebIO.pm
 lib/Device/WebIO/Device.pm
 lib/Device/WebIO/Device/ADC.pm
