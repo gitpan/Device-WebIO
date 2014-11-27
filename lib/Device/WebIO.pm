@@ -22,7 +22,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
 package Device::WebIO;
-$Device::WebIO::VERSION = '0.006';
+$Device::WebIO::VERSION = '0.007';
 # ABSTRACT: Duct Tape for the Internet of Things
 use v5.12;
 use Moo;
@@ -130,6 +130,23 @@ sub digital_input_port
     my $obj = $self->_get_obj( $name );
     $self->_role_check( $obj, 'DigitalInput' );
     return $obj->input_port;
+}
+
+sub digital_input_callback
+{
+    my ($self, $name, $pin, $type, $callback) = @_;
+    my $obj = $self->_get_obj( $name );
+    $self->_role_check( $obj, 'DigitalInputCallback' );
+    $self->_pin_count_check( $name, $obj, $pin, 'DigitalInputCallback' );
+    return $obj->input_callback_pin( $pin, $type, $callback );
+}
+
+sub digital_input_begin_loop
+{
+    my ($self, $name) = @_;
+    my $obj = $self->_get_obj( $name );
+    $self->_role_check( $obj, 'DigitalInputCallback' );
+    return $obj->input_begin_loop();
 }
 
 sub digital_output_port
@@ -507,6 +524,10 @@ sub _pin_count_for_obj
         $obj->does( 'Device::WebIO::Device::DigitalInput' ) ) {
         $count = $obj->input_pin_count;
     }
+    elsif( $type eq 'DigitalInputCallback' &&
+        $obj->does( 'Device::WebIO::Device::DigitalInputCallback' ) ) {
+        $count = $obj->input_pin_count;
+    }
     elsif( $type eq 'DigitalOutput' &&
         $obj->does( 'Device::WebIO::Device::DigitalOutput' ) ) {
         $count = $obj->output_pin_count;
@@ -537,13 +558,20 @@ sub _pin_count_for_obj
 
 sub _role_check
 {
-    my ($self, $obj, $want_type) = @_;
-    my $full_want_type = 'Device::WebIO::Device::' . $want_type;
+    my ($self, $obj, @want_types) = @_;
 
-    if(! $obj->does( $full_want_type ) ) {
+    my $does = 0;
+    for (@want_types) {
+        my $full_type = 'Device::WebIO::Device::' . $_;
+        if( $obj->does( $full_type ) ) {
+            $does = 1;
+            last;
+        }
+    }
+    if(! $does ) {
         Device::WebIO::FunctionNotSupportedException->throw( message =>
             "Object of type " . ref($obj)
-                . " does not do the $full_want_type role"
+                . " does not any of the " . join( ', ', @want_types ) . " roles"
         );
     }
 
@@ -683,6 +711,27 @@ Returns the input status of the given pin.  1 for on, 0 for off.
 
 Returns an integer with each bit representing the on or off status of the 
 associated pin.
+
+=head2 Input Callback
+
+These can be used if the device does the C<DigialInputCallback> role.
+
+=head3 digital_input_callback
+
+  digital_input_callback( $name, $pin, $type, $callback );
+
+Set a callback that will be triggered when C<$pin> changes state.  C<$type> 
+is one of the constants in the C<DigitalInputCallback> role, which controls 
+when the callback is triggered--C<TRIGGER_RISING>, C<TRIGGER_FALLING>, or 
+C<TRIGGER_RISING_FALLING>.
+
+C<$callback> is a subref that will be called.
+
+=head3 digital_input_begin_loop
+
+  digital_input_begin_loop( $name );
+
+Start the loop that will trigger callbacks.
 
 =head2 Output
 

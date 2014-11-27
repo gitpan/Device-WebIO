@@ -21,16 +21,20 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
-package Device::WebIO::Device::I2CProvider;
-$Device::WebIO::Device::I2CProvider::VERSION = '0.007';
+package Device::WebIO::Device::DigitalInputCallback;
+$Device::WebIO::Device::DigitalInputCallback::VERSION = '0.007';
 use v5.12;
 use Moo::Role;
 
-with 'Device::WebIO::Device';
 
-requires 'i2c_channels';
-requires 'i2c_read';
-requires 'i2c_write';
+with 'Device::WebIO::Device::DigitalInput';
+
+requires 'input_callback_pin';
+requires 'input_begin_loop';
+
+sub TRIGGER_RISING         { 0 }
+sub TRIGGER_FALLING        { 1 }
+sub TRIGGER_RISING_FALLING { 2 }
 
 
 1;
@@ -39,28 +43,25 @@ __END__
 
 =head1 NAME
 
-  Device::WebIO::Device::I2CProvider - Role for things that can do I2C read/write operations
+  Device::WebIO::Device::DigitalInputCallback - Role for interrupt-driven input
+
+=head1 DESCRIPTION
+
+This is an extension of C<DigitalInput> which can trigger callbacks.
 
 =head1 REQUIRED METHODS
 
-=head2 i2c_channels
+=head2 input_callback_pin
 
-Returns the number of i2c devices.
+  $dev->input_callback_pin( $pin, $dev->TRIGGER_RISING, sub { ... } )
 
-=head2 i2c_read
+Set a callback to trigger when the C<$pin> changes state.  It can be set to 
+trigger on the rising (C<TRIGGER_RISING>) or falling (C<TRIGGER_FALLING>) 
+edge, or both (C<TRIGGER_RISING_FALLING>).
 
-    i2c_read( $channel, $addr, $register, $length )
+=head2 input_begin_loop
 
-Read from the i2c device at the given C<$channel> and C<$addr>, from the given 
-C<$register>, expecting C<$length> bytes.  Returns a list of bytes.
-
-
-=head2 i2c_write
-
-    i2c_write( $channel, $addr, $register, @bytes )
-
-Write to the i2c device at the given C<$channel> and C<$addr>, from the given 
-C<$register>, writing out all the bytes in C<@bytes>.
+Start the callback loop running.
 
 =head1 LICENSE
 

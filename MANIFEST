@@ -12,6 +12,7 @@ lib/Device/WebIO.pm
 lib/Device/WebIO/Device.pm
 lib/Device/WebIO/Device/ADC.pm
 lib/Device/WebIO/Device/DigitalInput.pm
+lib/Device/WebIO/Device/DigitalInputCallback.pm
 lib/Device/WebIO/Device/DigitalOutput.pm
 lib/Device/WebIO/Device/I2CProvider.pm
 lib/Device/WebIO/Device/I2CUser.pm
@@ -34,9 +35,11 @@ t/070_description.t
 t/080_still_image_output.t
 t/090_i2c.t
 t/100_temp_sensors.t
+t/110_digital_input_callback.t
 t/200_two_types_one_obj.t
 t/lib/MockADCInput.pm
 t/lib/MockDigitalInput.pm
+t/lib/MockDigitalInputCallback.pm
 t/lib/MockDigitalInputOutput.pm
 t/lib/MockDigitalOutput.pm
 t/lib/MockI2CProvider.pm
