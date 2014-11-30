@@ -22,7 +22,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
 package Device::WebIO::Device::I2CProvider;
-$Device::WebIO::Device::I2CProvider::VERSION = '0.007';
+$Device::WebIO::Device::I2CProvider::VERSION = '0.008';
 use v5.12;
 use Moo::Role;
 

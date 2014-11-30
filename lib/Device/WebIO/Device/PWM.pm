@@ -1,5 +1,5 @@
 package Device::WebIO::Device::PWM;
-$Device::WebIO::Device::PWM::VERSION = '0.007';
+$Device::WebIO::Device::PWM::VERSION = '0.008';
 use v5.12;
 use Moo::Role;
 

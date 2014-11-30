@@ -21,22 +21,15 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
-package Device::WebIO::Device::StillImageOutput;
-$Device::WebIO::Device::StillImageOutput::VERSION = '0.008';
+package Device::WebIO::Device::VideoOutputCallback;
+$Device::WebIO::Device::VideoOutputCallback::VERSION = '0.008';
 use v5.12;
 use Moo::Role;
 
-with 'Device::WebIO::Device';
+with 'Device::WebIO::Device::VideoOutput';
 
-requires 'img_channels';
-requires 'img_height';
-requires 'img_width';
-requires 'img_quality';
-requires 'img_set_height';
-requires 'img_set_width';
-requires 'img_set_quality';
-requires 'img_allowed_content_types';
-requires 'img_stream';
+requires 'vid_stream_callback';
+requires 'vid_stream_begin_loop';
 
 1;
 __END__
@@ -44,64 +37,28 @@ __END__
 
 =head1 NAME
 
-  Device::WebIO::Device::StillImageOutput - Role for still images
+  Device::WebIO::Device::VideoOutputCallback - Role for callback-driven video
+
+=head1 DESCRIPTION
+
+This is an extension of C<VideoOutput> which can trigger callbacks.
 
 =head1 REQUIRED METHODS
 
-=head2 img_channels
+=head2 vid_stream_callback
 
-    img_channels();
+  vid_stream_callback( $channel, $type, $callback );
 
-Return the number of video channels.
+Add a callback that will be called for each frame of video.  The callback will 
+be passed an arrayref of bytes for the frame data.
 
-=head2 img_height
+Only 1 callback per channel will be kept.
 
-    img_height( $channel );
+=head2 vid_stream_begin_loop
 
-Return the height of the video for the given channel.
+  vid_stream_begin_loop( $channel );
 
-=head2 img_width
-
-    img_width( $channel );
-
-Return the width of the video for the given channel.
-
-=head2 img_quality
-
-    img_quality( $channel );
-
-Return the quality of the compression.  For JPEG, this would be 0 through 100.
-
-=head2 img_set_width
-
-    img_set_width( $channel, $width );
-
-Set the width of the video for the given channel.
-
-=head2 img_set_height
-
-    img_set_height( $channel, $height );
-
-Set the height of the video for the given channel.
-
-=head2 img_set_quality
-
-    img_set_quality( $channel, $quality );
-
-Set the quality of compression.  For JPEG, this would be 0 through 100.
-
-=head2 img_allowed_content_types
-
-    img_allowed_content_types( $channel );
-
-Return a list of supported MIME types by the given channel.
-
-=head2 img_stream
-
-    img_stream( $channel, $type );
-
-Return a filehandle for reading the image stream for the given channel.  
-C<$type> must be one of the types returned by C<img_allowed_content_types()>.
+Begin the loop that will start the callbacks.
 
 =head1 LICENSE
 

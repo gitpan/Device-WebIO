@@ -1,5 +1,5 @@
 package Device::WebIO::Device::SPI;
-$Device::WebIO::Device::SPI::VERSION = '0.007';
+$Device::WebIO::Device::SPI::VERSION = '0.008';
 use v5.12;
 use Moo;
 use namespace::clean;
