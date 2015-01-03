@@ -38,6 +38,7 @@ t/090_i2c.t
 t/100_temp_sensors.t
 t/110_digital_input_callback.t
 t/120_video_output_callback.t
+t/130_spi.t
 t/200_two_types_one_obj.t
 t/lib/MockADCInput.pm
 t/lib/MockDigitalInput.pm
@@ -47,6 +48,7 @@ t/lib/MockDigitalOutput.pm
 t/lib/MockI2CProvider.pm
 t/lib/MockI2CUser.pm
 t/lib/MockPWMOutput.pm
+t/lib/MockSPI.pm
 t/lib/MockStillImageOutput.pm
 t/lib/MockTempSensor.pm
 t/lib/MockVideoOutput.pm

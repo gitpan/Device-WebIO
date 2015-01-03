@@ -22,7 +22,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 # POSSIBILITY OF SUCH DAMAGE.
 package Device::WebIO;
-$Device::WebIO::VERSION = '0.008';
+$Device::WebIO::VERSION = '0.009';
 # ABSTRACT: Duct Tape for the Internet of Things
 use v5.12;
 use Moo;
@@ -512,6 +512,30 @@ sub temp_fahrenheit
     return $obj->temp_fahrenheit;
 }
 
+sub spi_set_speed
+{
+    my ($self, $name, $pin, $speed) = @_;
+    my $obj = $self->_get_obj( $name );
+    $self->_pin_count_check( $name, $obj, $pin, 'SPI' );
+    return $obj->spi_set_speed( $pin, $speed );
+}
+
+sub spi_read
+{
+    my ($self, $name, $pin, $len) = @_;
+    my $obj = $self->_get_obj( $name );
+    $self->_pin_count_check( $name, $obj, $pin, 'SPI' );
+    return $obj->spi_read( $pin, $len );
+}
+
+sub spi_write
+{
+    my ($self, $name, $pin, $data) = @_;
+    my $obj = $self->_get_obj( $name );
+    $self->_pin_count_check( $name, $obj, $pin, 'SPI' );
+    return $obj->spi_write( $pin, $data );
+}
+
 
 sub _get_obj
 {
@@ -571,6 +595,10 @@ sub _pin_count_for_obj
     elsif( $type eq 'I2CProvider' &&
         $obj->does( 'Device::WebIO::Device::I2CProvider' ) ) {
         $count = $obj->i2c_channels;
+    }
+    elsif( $type eq 'SPI' &&
+        $obj->does( 'Device::WebIO::Device::SPI' ) ) {
+        $count = $obj->spi_channels;
     }
 
     return $count;
@@ -1014,6 +1042,37 @@ bus and address.  Returns a list C<$num_bytes> long.
 
 Write the C<@bytes> list of bytes to the I2C register for the device on the 
 given bus and address.
+
+=head2 SPI
+
+=head3 spi_set_speed
+
+    spi_set_speed( $name, $pin, $speed );
+
+Set the speed on the given SPI device.
+
+=head3 spi_read
+
+    spi_read( $name, $pin, $len );
+
+Read C<$len> bytes from the given SPI device.  Returns an array of bytes.
+
+=head3 spi_write
+
+    spi_write( $name, $pin, $packed_data );
+
+Write C<$packed_data> to the given SPI device.  This data should be a packed 
+string For many devices, a single byte can packed using:
+
+  my $packed_data = pack 'n', $data;
+
+For an array of bytes, try:
+
+  my $packed_data = pack 'C*', @data;
+
+This can often be different based on the device, which is why we don't do it 
+for you.
+
 
 =head1 SEE ALSO
 
